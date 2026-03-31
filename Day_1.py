@@ -1,11 +1,9 @@
-def is_valid_ipv4(IPv4):
-    
+def is_valid_ipv4(IPv4):    
     Check_Ip = IPv4.split('.')
 
     if len(Check_Ip) != 4:
 
-        return False
-    
+        return False  
     for part in Check_Ip:
         if not part.isdigit():
             return False
