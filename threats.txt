@@ -1,0 +1,5 @@
+THREAT REPORT - Generated: 2026-04-08 11:22:24.741943
+==================================================
+Suspicious IPs (3+ log appearances)
+
+No suspicious IPs detected.

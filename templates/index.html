@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Name Country Predictor</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 60px auto;
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 12px;
+            width: 70%;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+        }
+
+        button {
+            padding: 12px 16px;
+            margin-left: 10px;
+            border: none;
+            background: #38bdf8;
+            color: black;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #0ea5e9;
+        }
+
+        .result {
+            margin-top: 25px;
+            text-align: left;
+        }
+
+        .country {
+            margin-bottom: 15px;
+        }
+
+        .bar-container {
+            background: #334155;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .bar {
+            height: 20px;
+            width: 0;
+            background: linear-gradient(90deg, #22c55e, #4ade80);
+            transition: width 1s ease;
+        }
+
+        .label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .loading {
+            display: none;
+            margin-top: 15px;
+        }
+
+        .empty {
+            margin-top: 20px;
+            color: #94a3b8;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="container">
+    <h1>🌍 Name Origin Predictor</h1>
+
+    <form method="POST" onsubmit="showLoading()">
+        <input type="text" name="name" placeholder="Type a name..." required>
+        <button type="submit">Predict</button>
+    </form>
+
+    <div id="loading" class="loading">⏳ Analyzing...</div>
+
+    {% if countries %}
+    <div class="result">
+        <h3>Results for "{{ name }}"</h3>
+
+        {% for country in countries %}
+        <div class="country">
+            <div class="label">
+                <span>{{ country.name }}</span>
+                <span>{{ country.percentage }}%</span>
+            </div>
+            <div class="bar-container">
+                <div class="bar" data-width="{{ country.percentage }}"></div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        {% if name %}
+            <div class="empty">No results found 🤔</div>
+        {% endif %}
+    {% endif %}
+</div>
+
+<script>
+    function showLoading() {
+        document.getElementById("loading").style.display = "block";
+    }
+
+    window.onload = function() {
+        let bars = document.querySelectorAll(".bar");
+        bars.forEach(bar => {
+            let width = bar.getAttribute("data-width");
+            setTimeout(() => {
+                bar.style.width = width + "%";
+            }, 200);
+        });
+    }
+</script>
+
+</body>
+</html>
