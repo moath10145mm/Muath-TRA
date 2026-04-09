@@ -1,0 +1,11 @@
+--- Network Device Audit Report ---
+
+Device: router1
+- Error: SSH error on 192.168.100.125: [Errno 2] No such file or directory: 'C:\\Users\\Muath\\Desktop\\TRA_Python\\.ssh\\id_rsa'
+
+Device: router2
+- Error: SSH error on 192.168.100.125: [Errno 2] No such file or directory: 'C:\\Users\\Muath\\Desktop\\TRA_Python\\.ssh\\id_rsa'
+
+Device: router3
+- Error: SSH error on 192.168.100.125: [Errno 2] No such file or directory: 'C:\\Users\\Muath\\Desktop\\TRA_Python\\.ssh\\id_rsa'
+
