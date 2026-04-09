@@ -1,5 +1,6 @@
 import paramiko
 from datetime import datetime
+import time
 
 # =======================
 # Configuration
@@ -8,7 +9,6 @@ SSH_CONFIG = {
     "hostname": "192.168.100.125",
     "port": 22,
     "username": "codline_academy",
-    "pkey_path": r"C:\Users\Muath\Desktop\TRA_Python\.ssh\id_rsa",
     "password": "mynameismuath"
 }
 
@@ -49,9 +49,7 @@ def check_snmp(config: str) -> str:
 # =======================
 # SSH Connection
 # =======================
-def create_ssh_client(hostname, port, username, pkey_path, password):
-    pkey = paramiko.RSAKey.from_private_key_file(pkey_path, password=password)
-
+def create_ssh_client(hostname, port, username, password):
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
@@ -59,7 +57,7 @@ def create_ssh_client(hostname, port, username, pkey_path, password):
         hostname=hostname,
         port=port,
         username=username,
-        pkey=pkey
+        password=password
     )
 
     return client
@@ -67,25 +65,23 @@ def create_ssh_client(hostname, port, username, pkey_path, password):
 
 def fetch_running_config(client):
     """
-    Execute 'show running-config' instead of reading a file
+    Use interactive shell for Cisco devices
     """
-    stdin, stdout, stderr = client.exec_command("show running-config")
+    shell = client.invoke_shell()
 
-    config = stdout.read().decode()
-    error = stderr.read().decode().strip()
+    shell.send("terminal length 0\n")  # disable paging
+    shell.send("show running-config\n")
 
-    if error:
-        raise Exception(error)
+    time.sleep(2)
 
-    return config
+    output = shell.recv(65535).decode()
+    return output
 
 
-def ssh_with_pkey(hostname, port, username, pkey_path):
+def ssh_with_password(hostname, port, username, password):
     client = None
     try:
-        client = create_ssh_client(
-            hostname, port, username, pkey_path, SSH_CONFIG["password"]
-        )
+        client = create_ssh_client(hostname, port, username, password)
 
         print(f"Connected to {hostname}")
 
@@ -112,11 +108,11 @@ def audit_device(device):
     }
 
     try:
-        config = ssh_with_pkey(
+        config = ssh_with_password(
             SSH_CONFIG["hostname"],
             SSH_CONFIG["port"],
             SSH_CONFIG["username"],
-            SSH_CONFIG["pkey_path"]
+            SSH_CONFIG["password"]
         )
 
         result.update({
